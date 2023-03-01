@@ -7,11 +7,13 @@ import SockJsClient from "react-stomp";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import IconButton from '@mui/material/IconButton';
+import Close from '@mui/material/IconButton';
 
 export default function Dashboard() {
-  const [value, setValue] = useState("111");
+  const [value, setValue] = useState("");
 
-  const SOCKET_URL = "http://localhost:8080/ws-chat/";
+  const SOCKET_URL = "http://localhost:8080/hola/";
 
   let onConnected = () => {
     console.log("Connected!!");
@@ -57,6 +59,11 @@ export default function Dashboard() {
   //     </div>
   //   );
   // }
+
+  const removeMessgae = () => {
+    const arr = messages.filter((item) => item.id !== value);
+    setMessages(arr);
+};
 
   return (
     // <div className="body">
@@ -112,14 +119,14 @@ export default function Dashboard() {
     //           </div>
     //         </TabContext>
     //       </div>
-    //       <SockJsClient
-    //         url={SOCKET_URL}
-    //         topics={["/topic/group"]}
-    //         onConnect={onConnected}
-    //         onDisconnect={console.log("Disconnected!")}
-    //         onMessage={(msg) => onMessageReceived(msg)}
-    //         debug={false}
-    //       />
+    // <SockJsClient
+    //   url={SOCKET_URL}
+    //   topics={["/topic/group"]}
+    //   onConnect={onConnected}
+    //   onDisconnect={console.log("Disconnected!")}
+    //   onMessage={(msg) => onMessageReceived(msg)}
+    //   debug={false}
+    // />
     //     </div>
     //   </Box>
     //   <div className="container">
@@ -151,6 +158,8 @@ export default function Dashboard() {
     //   </TabContext>
     // </Box>
 
+    
+
     <Box className="body">
       <TabContext value={value}>
         <div className=" bg-info form-inline">
@@ -169,14 +178,24 @@ export default function Dashboard() {
             </button>
           </div>
           <div className="col-md-6">
-            <Box className="bg-info" sx={{ width: '100%', typography: 'body1' }}>
+            <Box
+              className="bg-info"
+              sx={{ width: "100%", typography: "body1" }}
+            >
               <TabList
                 onChange={handleChange}
                 variant="scrollable"
                 scrollButtons="auto"
                 aria-label="scrollable auto tabs example"
               >
-                <Tab label="Item One" value="111" />
+                <Tab label={          <span>
+                    {'Active'}
+                    <IconButton size="small" onClick={() => { console.log("fdfddfdsfdfs") }}>
+                      <p style={{color : "red"}}>x</p>
+                    </IconButton>
+                  </span>} value="111">
+                  
+                </Tab>
                 <Tab label="Item Two" value="112" />
                 <Tab label="Item Three" value="113" />
                 <Tab label="Item Four" value="114" />
@@ -187,17 +206,47 @@ export default function Dashboard() {
                 <Tab label="Item Seven" value="119" />
                 <Tab label="Item Seven" value="120" />
                 <Tab label="Item Seven" value="121" />
+                {messages.map((msg) => (
+                  <Tab label={<span>
+                    {msg.id + "-" + msg.name}
+                    <IconButton size="small" onClick={removeMessgae }>
+                      <p style={{color : "red"}}>x</p>
+                    </IconButton>
+                  </span>}  value={msg.id} />
+                ))}
               </TabList>
             </Box>
           </div>
         </div>
         <div className="container">
-
-        
-        <TabPanel value="112">Item One</TabPanel>
-        <TabPanel value="111">Item Two</TabPanel>
-        <TabPanel value="116">Item Three</TabPanel>
+          <TabPanel value="112">
+            Item One
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={buttonClick}
+            >
+              Primary
+            </button>
+          </TabPanel>
+          <TabPanel value="111">Item Two</TabPanel>
+          <TabPanel value="116">Item Three</TabPanel>
+          {messages.map((msg) => (
+            <TabPanel value={msg.id}>
+              <h1>ID: {msg.id}</h1>
+              <h1>Name: {msg.name}</h1>
+              <h1>Address: {msg.address}</h1>
+            </TabPanel>
+          ))}
         </div>
+        <SockJsClient
+          url={SOCKET_URL}
+          topics={["topic"]}
+          onConnect={onConnected}
+          onDisconnect={console.log("Disconnected!")}
+          onMessage={(msg) => onMessageReceived(msg)}
+          debug={false}
+        />
       </TabContext>
     </Box>
   );
