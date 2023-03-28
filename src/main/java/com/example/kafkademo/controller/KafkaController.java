@@ -27,4 +27,14 @@ public class KafkaController {
         }
     }
 
+    @GetMapping("allStudent")
+    public ResponseEntity<?> allStudent(){
+        try {
+            return ResponseEntity.ok(studentService.getAll());
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error");
+        }
+    }
+
 }

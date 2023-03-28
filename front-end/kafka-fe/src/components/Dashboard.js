@@ -2,13 +2,14 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SockJsClient from "react-stomp";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import IconButton from '@mui/material/IconButton';
 import Close from '@mui/material/IconButton';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Dashboard() {
   const [value, setValue] = useState("");
@@ -20,50 +21,120 @@ export default function Dashboard() {
   };
 
   const [messages, setMessages] = useState([]);
+  const [notifies, setNotifies] = useState([]);
 
-  let onMessageReceived = (msg) => {
+  const onMessageReceived = (msg) => {
     console.log("New Message Received!!", msg);
     setMessages(messages.concat(msg));
+    toast("Có thêm sinh viên:"+msg.name)
   };
+
+  
+  let onNotifyTopicChange = (msg) => {
+    console.log("New notify Received!!", msg);
+    setNotifies(notifies.concat(msg));
+
+  };
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  // interface TabPanelProps {
-  //   children?: React.ReactNode;
-  //   index: number;
-  //   value: number;
-  // }
-
   function buttonClick(event) {
     console.log("List msg:" + JSON.stringify(messages));
   }
 
-  // function TabPanel(props: TabPanelProps) {
-  //   const { children, value, index, ...other } = props;
-
-  //   return (
-  //     <div
-  //       role="tabpanel"
-  //       hidden={value !== index}
-  //       id={`simple-tabpanel-${index}`}
-  //       aria-labelledby={`simple-tab-${index}`}
-  //       {...other}
-  //     >
-  //       {value === index && (
-  //         <Box sx={{ p: 3 }}>
-  //           <Typography>{children}</Typography>
-  //         </Box>
-  //       )}
-  //     </div>
-  //   );
-  // }
 
   const removeMessgae = () => {
+    console.log("valueeee="+value)
     const arr = messages.filter((item) => item.id !== value);
     setMessages(arr);
+    
 };
+
+// useEffect(() => {
+
+//   console.log("notify="+notifies[notifies.length-1])
+
+  
+// }, [notifies]);
+
+useEffect(() => {
+  var myHeaders = new Headers();
+
+  var requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+  };
+
+  fetch("http://localhost:8080/api/allStudent", requestOptions)
+      .then((response) => {
+        console.log(response.errorCode);
+        //console.log("res: " + JSON.stringify(response));
+        if (response.ok) {
+          return response.json();
+        }
+        if (response.status === 401) {
+          window.location.replace("/login");
+          // alert("oke nhap!");
+          return;
+        }
+        throw Error(response.status);
+
+        // navigate("/User");
+      })
+      .then((result) => {
+        //console.log("res: " + result);
+        console.log("data: " + JSON.stringify(result));
+        
+        setMessages(result);
+        //console.log("data2: " + banners);
+      })
+      .catch((err) => {
+        //console.log("err", err);
+      });
+
+},[]);
+
+const test = () =>{
+  toast("fffffffffffffffffffff");
+  // var myHeaders = new Headers();
+  //   myHeaders.append("Authorization", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOjEwMjE2LFwidXNlcm5hbWVcIjpcIjA5NzE1NDg3ODdcIixcInJlbWVtYmVyTWVcIjowLFwicm9sZVwiOlwiRk9PRF9BRE1JTlwifSIsImV4cCI6MTY3ODIzODg4MCwiaWF0IjoxNjc4MTUyNDgwfQ.LNrtvb2bNXlEfEQaQ2ZQ96SSmrOkWTDvjR4JZRUut_lEKz3VX4Nv0RyudR5R6N7lfSDPplnm_SvLpV1pGNbP6g");
+  //   myHeaders.append("Content-Type", "application/json");
+  //   var requestOptions = {
+  //     method: "GET",
+  //     headers: myHeaders,
+  //   };
+
+  //   fetch("http://192.168.100.197:2108/dish/api/cart/get-cart-id", requestOptions)
+  //     .then((response) => {
+  //       console.log(response.errorCode);
+  //       console.log("res: " + JSON.stringify(response));
+  //       if (response.ok) {
+  //         return response.json();
+  //       }
+  //       if (response.status === 401) {
+  //         window.location.replace("/login");
+  //         // alert("oke nhap!");
+  //         return;
+  //       }
+  //       throw Error(response.status);
+  //       // navigate("/User");
+  //     })
+  //     .then((result) => {
+  //       console.log("res: " + result);
+  //       console.log("data: " + JSON.stringify(result.data));
+      
+  //       // console.log("data2: " + banners);
+  //     })
+  //     .catch((err) => {
+  //       console.log("err", err);
+  //       // alert("Lỗi tải trang!");
+  //     });
+
+};
+
 
   return (
     // <div className="body">
@@ -175,6 +246,12 @@ export default function Dashboard() {
               type="submit"
             >
               Search
+            </button>           
+             <button
+              className="btn btn-outline-success my-2 my-sm-0"
+              onClick={test}
+            >
+              Test
             </button>
           </div>
           <div className="col-md-6">
@@ -196,13 +273,7 @@ export default function Dashboard() {
                   </span>} value="111">
                   
                 </Tab>
-                <Tab label="Item Two" value="112" />
-                <Tab label="Item Three" value="113" />
-                <Tab label="Item Four" value="114" />
-                <Tab label="Item Five" value="115" />
-                <Tab label="Item Six" value="116" />
-                <Tab label="Item Seven" value="117" />
-                <Tab label="Item Seven" value="118" />
+
                 <Tab label="Item Seven" value="119" />
                 <Tab label="Item Seven" value="120" />
                 <Tab label="Item Seven" value="121" />
@@ -247,7 +318,16 @@ export default function Dashboard() {
           onMessage={(msg) => onMessageReceived(msg)}
           debug={false}
         />
+        {/* <SockJsClient
+          url={SOCKET_URL}
+          topics={["notifyTopic"]}
+          onConnect={onConnected}
+          onDisconnect={console.log("Disconnected!")}
+          onMessage={(msg) => onNotifyTopicChange(msg)}
+          debug={false}
+        /> */}
       </TabContext>
+      <ToastContainer />
     </Box>
   );
 }
