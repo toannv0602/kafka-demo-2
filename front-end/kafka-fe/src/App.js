@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 // import "bootstrap/dist/js/bootstrap.min.js";
 import Dashboard from "./components/Dashboard";
+import DashboardNew from "./components/DashboardNew";
+import Test from "./components/Test";
 import IntegrationNotistack from "./components/IntegrationNotistack";
 
 import {
@@ -20,7 +22,8 @@ import {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/" element={<Test />} />
+      <Route path="/new" element={<DashboardNew />} />
     </Routes>
   );
 }

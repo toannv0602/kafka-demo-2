@@ -46,7 +46,13 @@ public class StartupListener implements ApplicationRunner {
 
     @KafkaListener(topics = "notify", groupId = "group-id")
     public void listenNotify(String message) {
-        System.out.println("Received notify in group - group-id: " + message);
+        System.out.println("Received notify in group - group-id2: " + message);
         template.convertAndSend("notifyTopic", message);
     }
+
+//    @KafkaListener(topics = "notify2", groupId = "group-id")
+//    public void listenNotify2(String message) {
+//        System.out.println("Received notify2 in group - group-id: " + message);
+//        template.convertAndSend("notifyTopic", message);
+//    }
 }

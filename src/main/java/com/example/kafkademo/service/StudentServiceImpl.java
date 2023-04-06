@@ -35,11 +35,17 @@ public class StudentServiceImpl implements StudentService {
         kafkaTemplate.send("notify", msg);
     }
 
+//    private void sendNotify2(String msg) {
+//        kafkaTemplate.send("notify2", msg);
+//    }
+
+
     @Override
     public void pushQueue(Student student) throws Exception{
         System.out.println("STUDENT REQUST: "+ gson.toJson(student));
         sendMessage( gson.toJson(student));
         sendNotify( "Có thêm sinh viên: "+student.getName());
+//        sendNotify2( "Có thêm sinh viên2: "+student.getName());
         studentList.add(student);
     }
 
