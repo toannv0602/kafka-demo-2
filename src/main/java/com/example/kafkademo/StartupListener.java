@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -38,21 +39,23 @@ public class StartupListener implements ApplicationRunner {
 //        }
     }
 
-    @KafkaListener(topics = "test", groupId = "group-id")
-    public void listen(String message) {
-        System.out.println("Received Message in group - group-id: " + message);
-        template.convertAndSend("topic", message);
-    }
-
-    @KafkaListener(topics = "notify", groupId = "group-id")
-    public void listenNotify(String message) {
-        System.out.println("Received notify in group - group-id2: " + message);
-        template.convertAndSend("notifyTopic", message);
-    }
-
-//    @KafkaListener(topics = "notify2", groupId = "group-id")
-//    public void listenNotify2(String message) {
-//        System.out.println("Received notify2 in group - group-id: " + message);
+//    @KafkaListener(topics = "test", groupId = "group-id")
+//    public void listen(String message) {
+//        System.out.println("Received Message in group - group-id: " + message);
+//        template.convertAndSend("topic", message);
+//    }
+//
+//    @KafkaListener(topics = "notify", groupId = "group-id")
+//    public void listenNotify(String message) {
+//        System.out.println("Received notify in group - group-id2: " + message);
 //        template.convertAndSend("notifyTopic", message);
 //    }
+
+    @KafkaListener(id = "idToan", groupId = "group-ahamove-100", topicPartitions = @TopicPartition(topic = "order-ahamove2",
+            partitions = {"0-10"}))
+//@KafkaListener(topics = "bartending", groupId = "group-test")
+    public void listenNotify2(String message) { 
+        System.out.println("Received notify2 in group - group-id: " + message);
+//        template.convertAndSend("notifyTopic", message);
+    }
 }

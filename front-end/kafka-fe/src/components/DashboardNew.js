@@ -179,7 +179,7 @@ export default function DashboardNew() {
         </div>
         <SockJsClient
           url={SOCKET_URL}
-          topics={["bartendingOrder"]}
+          topics={["bartendingOrder1"]}
           onConnect={onConnected}
           onDisconnect={console.log("Disconnected!")}
           onMessage={(msg) => onMessageReceived(msg)}

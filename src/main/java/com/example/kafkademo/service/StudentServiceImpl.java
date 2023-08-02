@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -29,10 +30,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private void sendMessage(String msg) {
-        kafkaTemplate.send("test", msg);
+        kafkaTemplate.send("toannv", msg);
     }
     private void sendNotify(String msg) {
-        kafkaTemplate.send("notify", msg);
+        kafkaTemplate.send("notify", UUID.randomUUID().toString(),msg);
     }
 
 //    private void sendNotify2(String msg) {
@@ -44,7 +45,7 @@ public class StudentServiceImpl implements StudentService {
     public void pushQueue(Student student) throws Exception{
         System.out.println("STUDENT REQUST: "+ gson.toJson(student));
         sendMessage( gson.toJson(student));
-        sendNotify( "Có thêm sinh viên: "+student.getName());
+//        sendNotify( "Có thêm sinh viên: "+student.getName());
 //        sendNotify2( "Có thêm sinh viên2: "+student.getName());
         studentList.add(student);
     }
