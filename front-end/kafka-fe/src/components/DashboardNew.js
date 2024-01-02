@@ -14,7 +14,7 @@ import { ToastContainer, toast } from 'react-toastify';
 export default function DashboardNew() {
   const [value, setValue] = useState("");
 
-  const SOCKET_URL = "http://192.168.100.197:2108/dish/api/hola-canteen/";
+  const SOCKET_URL = "http://192.168.100.185:1712/retail/api/hola-retail";
   // const SOCKET_URL = "http://localhost:2108/dish/api/hola-canteen/";
 
   let onConnected = () => {
@@ -179,7 +179,7 @@ export default function DashboardNew() {
         </div>
         <SockJsClient
           url={SOCKET_URL}
-          topics={["bartendingOrder1"]}
+          topics={["bartendingOrder64"]}
           onConnect={onConnected}
           onDisconnect={console.log("Disconnected!")}
           onMessage={(msg) => onMessageReceived(msg)}
